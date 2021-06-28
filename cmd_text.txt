@@ -1,0 +1,193 @@
+cmd_text :
+
+λ python
+Python 3.9.5 (tags/v3.9.5:0a7dcbd, May  3 2021, 17:27:52) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base,Restaurant,MenuItem
+engine = create_engine('sqlite:///restaurantmenu.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind = engine)
+session = DBSession()
+>>> myFirstRestaurant = Restaurant(name = "Pizza Palace")
+>>> session.add(myFirstRestaurant)
+>>> session.commit()
+>>> session.query(Restaurant).all()
+[<database_setup.Restaurant object at 0x00000192CB76D1F0>]
+>>> cheesepizza = MenuItem(name = "cheese pizza", description = "made with multiple cheese", price = "$120", course = "Entree", restaurant = "myFirstRestaurant")
+>>> session.add(cheesepizza)
+
+ sausagePizza = MenuItem(name = "sausage pizza", course = "yummee", description = " pizza with meat balls", price = "$23.23", restaurant = "myFirstRestaurant")
+____________________________________________________________________________________________________________________________
+ python
+Python 3.9.5 (tags/v3.9.5:0a7dcbd, May  3 2021, 17:27:52) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from sqlalchemy import create_engine
+>>> from sqlalchemy.orm import sessionmaker
+>>> from database_setup import Base,Restaurant,MenuItem
+>>> engine = create_engine('sqlite:///restaurantmenu.db')
+>>> Base.metadata.bind = engine
+>>> DBSession = sessionmaker(bind = engine)
+>>> session = DBSession()
+>>> session.query(Restaurant).all()
+[<database_setup.Restaurant object at 0x000001169E1B6A90>, <database_setup.Restaurant object at 0x000001169E1B6AF0>, <database_setup.Restaurant object at 0x000001169E1B6A30>, <database_setup.Restaurant object at 0x000001169E168F70>, <database_setup.Restaurant object at 0x000001169E1681F0>, <database_setup.Restaurant object at 0x000001169E168A90>, <database_setup.Restaurant object at 0x000001169E1CD040>, <database_setup.Restaurant object at 0x000001169E1CD100>, <database_setup.Restaurant object at 0x000001169E1CD1C0>, <database_setup.Restaurant object at 0x000001169E1CD280>]
+>>> session = DBSession()
+>>> items = session.query(MenuItem).all()
+>>> for item in items:
+... print item.name
+  File "<stdin>", line 2
+    print item.name
+    ^
+IndentationError: expected an indented block
+>>> for item in items:
+... Print item.name
+  File "<stdin>", line 2
+    Print item.name
+    ^
+IndentationError: expected an indented block
+>>> for item in items:
+...     Print item.name
+  File "<stdin>", line 2
+    Print item.name
+          ^
+SyntaxError: invalid syntax
+>>> for item in items:
+...     print item.name
+  File "<stdin>", line 2
+    print item.name
+          ^
+SyntaxError: Missing parentheses in call to 'print'. Did you mean print(item.name)?
+>>> for item in items:
+...     print(item.name)
+...
+Veggie Burger
+French Fries
+Chicken Burger
+Chocolate Cake
+Sirloin Burger
+Root Beer
+Iced Tea
+Grilled Cheese Sandwich
+Veggie Burger
+Chicken Stir Fry
+Peking Duck
+Spicy Tuna Roll
+Nepali Momo
+Beef Noodle Soup
+Ramen
+Pho
+Chinese Dumplings
+Gyoza
+Stinky Tofu
+Veggie Burger
+Tres Leches Cake
+Mushroom risotto
+Honey Boba Shaved Snow
+Cauliflower Manchurian
+Aloo Gobi Burrito
+Veggie Burger
+Shellfish Tower
+Chicken and Rice
+Mom's Spaghetti
+Choc Full O' Mint (Smitten's Fresh Mint Chip ice cream)
+Tonkatsu Ramen
+Lamb Curry
+Chicken Marsala
+Potstickers
+Nigiri Sampler
+Veggie Burger
+Chicken Fried Steak
+Boysenberry Sorbet
+Broiled salmon
+Morels on toast (seasonal)
+Tandoori Chicken
+Veggie Burger
+Spinach Ice Cream
+Super Burrito Al Pastor
+Cachapa
+Chantrelle Toast
+Guanciale Chawanmushi
+Lemon Curd Ice Cream Sandwich
+>>> veggieBurgers = session.query(MenuItem).filter_by(name = 'Veggie Burger')
+>>> for veggie in veggieBurgers :
+...     print(veggie.name)
+...
+Veggie Burger
+Veggie Burger
+Veggie Burger
+Veggie Burger
+Veggie Burger
+Veggie Burger
+>>> for veggie in veggieBurgers :
+... print(veggie.description)
+  File "<stdin>", line 2
+    print(veggie.description)
+    ^
+IndentationError: expected an indented block
+>>> for veggie in veggieBurgers:
+...     print(veggie.description)
+...
+Juicy grilled veggie patty with tomato mayo and lettuce
+Made with freshest of ingredients and home grown spices
+Juicy grilled veggie patty with tomato mayo and lettuce
+Juicy grilled veggie patty with tomato mayo and lettuce
+Juicy grilled veggie patty with tomato mayo and lettuce
+Juicy grilled veggie patty with tomato mayo and lettuce
+>>> for veggie in veggieBurgers:
+...     print(veggie.id)
+...     print(veggie.price)
+...     print(veggie.restaurant.name)
+...     print('\n')
+...
+1
+$7.50
+Urban Burger
+
+
+9
+$5.99
+Urban Burger
+
+
+20
+$9.50
+Panda Garden
+
+
+26
+$6.80
+Thyme for That Vegetarian Cuisine
+
+
+36
+$7.00
+Andala's
+
+
+42
+$9.50
+Auntie Ann's Diner
+
+>>> urban_burger = session.query(MenuItem).filter_by(id = 20).one()
+>>>
+>>> urban_burger.name
+'Veggie Burger'
+>>> urban_burger.restaurant.name
+'Panda Garden'
+
+>>> spinach = session.query(MenuItem).filter_by(name = "Spinach Ice Cream").one()
+>>> print(spinach.restaurant.name)
+Auntie Ann's Diner
+>>> session.delete(spinach)
+>>> session.commit()
+>>> spinach = session.query(MenuItem).filter_by(name = "Spinach Ice Cream").one()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Python39\lib\site-packages\sqlalchemy\orm\query.py", line 2800, in one
+    return self._iter().one()
+  File "C:\Python39\lib\site-packages\sqlalchemy\engine\result.py", line 1365, in one
+    return self._only_one_row(
+  File "C:\Python39\lib\site-packages\sqlalchemy\engine\result.py", line 561, in _only_one_row
+    raise exc.NoResultFound(
+sqlalchemy.exc.NoResultFound: No row was found when one was required
